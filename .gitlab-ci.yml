@@ -1,0 +1,22 @@
+# Intégration continue sur git.spip.net : toutes les vérifications, sur chaque version de PHP prise en charge.
+
+stages:
+  - check
+
+check:
+  stage: check
+  image: php:${PHP_VERSION}-cli
+  parallel:
+    matrix:
+      - PHP_VERSION: ["8.4", "8.5"]
+  cache:
+    key: composer-${PHP_VERSION}
+    paths:
+      - vendor/
+  before_script:
+    - curl -sSLf -o /usr/local/bin/install-php-extensions https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions
+    - chmod +x /usr/local/bin/install-php-extensions
+    - install-php-extensions @composer zip
+    - composer install --no-interaction --no-progress
+  script:
+    - composer check
