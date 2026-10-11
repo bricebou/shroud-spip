@@ -1,0 +1,89 @@
+{
+    "name": "momh/shroud-spip",
+    "description": "Plateforme SPIP de Shroud : déclaration de la distribution nue, schémas figés, fichier de connexion et conventions de texte.",
+    "license": "GPL-3.0-or-later",
+    "type": "library",
+    "keywords": [
+        "anonymisation",
+        "gdpr",
+        "privacy",
+        "pseudonymisation",
+        "spip"
+    ],
+    "homepage": "https://git.spip.net/spip-contrib-outils/shroud-spip",
+    "authors": [
+        {
+            "name": "bricebou",
+            "email": "bricebou@momh.fr",
+            "homepage": "https://momh.fr"
+        }
+    ],
+    "require": {
+        "php": "^8.4"
+    },
+    "require-dev": {
+        "php-parallel-lint/php-parallel-lint": "^1.4",
+        "phpstan/extension-installer": "^1.4",
+        "phpstan/phpstan": "^2.3",
+        "phpstan/phpstan-phpunit": "^2.0",
+        "phpstan/phpstan-strict-rules": "^2.0",
+        "phpunit/phpunit": "^13.0",
+        "rector/rector": "^2.7",
+        "spip-league/easy-coding-standard": "^1.1",
+        "spip-league/sdk": "^1.0"
+    },
+    "repositories": {
+        "spip": {
+            "type": "composer",
+            "url": "https://get.spip.net/composer"
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Shroud\\Spip\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Shroud\\Spip\\Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "phpstan/extension-installer": true
+        },
+        "optimize-autoloader": true,
+        "sort-packages": true
+    },
+    "scripts": {
+        "check": [
+            "@check:syntax",
+            "@check:cs",
+            "@check:rector",
+            "@check:static",
+            "@test"
+        ],
+        "check:cs": "ecs check --ansi",
+        "check:rector": "rector process --dry-run --ansi",
+        "check:static": "phpstan --memory-limit=-1",
+        "check:syntax": "parallel-lint --exclude vendor .",
+        "fix": [
+            "@fix:rector",
+            "@fix:cs"
+        ],
+        "fix:cs": "ecs check --fix --ansi",
+        "fix:rector": "rector process --ansi",
+        "test": "phpunit --colors --testdox"
+    },
+    "scripts-descriptions": {
+        "check": "Toutes les vérifications, sans rien modifier : syntaxe, style, Rector, analyse statique, tests",
+        "check:cs": "Vérifier le style (ECS, règles SPIP)",
+        "check:rector": "Lister les changements que Rector appliquerait",
+        "check:static": "Analyse statique (PHPStan)",
+        "check:syntax": "Vérifier la syntaxe PHP (parallel-lint)",
+        "fix": "Appliquer Rector, puis le style",
+        "fix:cs": "Corriger le style (ECS, règles SPIP)",
+        "fix:rector": "Appliquer les règles Rector",
+        "test": "Tests unitaires (PHPUnit)"
+    }
+}

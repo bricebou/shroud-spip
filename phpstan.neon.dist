@@ -1,0 +1,9 @@
+parameters:
+    phpVersion: 80400
+    level: 9
+    paths:
+        - src
+        - tests
+    scanDirectories:
+        # Stubs des fonctions de SPIP (sql_*, lister_tables_objets_sql…)
+        - vendor/spip-league/sdk/src/Stub
