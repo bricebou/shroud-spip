@@ -42,7 +42,8 @@ grumphp:
       skip_on_merge_commit: true
       # Le sujet peut commencer par une lettre accentuée.
       additional_modifiers: u
-      type_scope_conventions:
-        types: [build, chore, ci, docs, feat, fix, perf, refactor, revert, style, test]
-        scopes: []
-        subject_pattern: '[\p{L}\p{N}]'
+      # Conventional Commits, une rupture de compatibilité marquée par « ! » après le type ou la portée.
+      matchers:
+        Type Conventional Commits: '/^(?:(?:fixup|squash|amend)! )?(?:build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test)(?:\([^)]+\))?!?: [\p{L}\p{N}]/'
+      case_insensitive: false
+      multiline: false
