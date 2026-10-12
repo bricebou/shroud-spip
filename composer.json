@@ -20,7 +20,7 @@
     ],
     "require": {
         "php": "^8.4",
-        "momh/shroud": "*@dev"
+        "momh/shroud": "^0.1"
     },
     "require-dev": {
         "php-parallel-lint/php-parallel-lint": "^1.4",
@@ -35,13 +35,6 @@
         "spip-league/sdk": "^1.0"
     },
     "repositories": {
-        "shroud": {
-            "type": "path",
-            "url": "../core",
-            "options": {
-                "symlink": true
-            }
-        },
         "spip": {
             "type": "composer",
             "url": "https://get.spip.net/composer"
