@@ -7,7 +7,7 @@ namespace Shroud\Spip;
 use Shroud\Adapter\Pdo\ConnectionSettings;
 use Shroud\Context;
 use Shroud\Declaration\Declaration;
-use Shroud\Platform\PlatformInterface;
+use Shroud\Platform\AbstractPlatform;
 use Shroud\Schema\DraftRule;
 use Shroud\Schema\FrozenSchemas;
 use Shroud\Schema\Glossary\English;
@@ -24,7 +24,7 @@ use Shroud\Strategy\Value\Keep;
  * Les tables d'un site portent le préfixe que fixe son `config/connect.php`, `spip` par défaut ;
  * `forSite()` le lit.
  */
-final readonly class SpipPlatform implements PlatformInterface
+final readonly class SpipPlatform extends AbstractPlatform
 {
     /**
      * Les alias de raccourcis de SPIP et le type d'objet qu'ils désignent, tels que `typer_raccourci()`
