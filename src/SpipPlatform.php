@@ -20,8 +20,11 @@ use Shroud\Strategy\Value\Keep;
 /**
  * Décrit SPIP au noyau de Shroud : son balisage, ses raccourcis, sa distribution, ses schémas figés,
  * sa version, son fichier de connexion et le vocabulaire de ses colonnes.
+ *
+ * Les tables d'un site portent le préfixe que fixe son `config/connect.php`, `spip` par défaut ;
+ * `forSite()` le lit.
  */
-final class SpipPlatform implements PlatformInterface
+final readonly class SpipPlatform implements PlatformInterface
 {
     /**
      * Les alias de raccourcis de SPIP et le type d'objet qu'ils désignent, tels que `typer_raccourci()`
@@ -44,6 +47,21 @@ final class SpipPlatform implements PlatformInterface
         'img' => 'document',
         'rub' => 'rubrique',
     ];
+
+    /**
+     * @param string $prefix le préfixe des tables du site, sans le tiret bas
+     */
+    public function __construct(
+        public string $prefix = 'spip',
+    ) {}
+
+    /**
+     * Rend la plateforme d'un site, au préfixe de tables que fixe son `config/connect.php`.
+     */
+    public static function forSite(string $directory): self
+    {
+        return new self(ConnectFile::read($directory . '/config/connect.php')->prefix);
+    }
 
     public function name(): string
     {
@@ -86,12 +104,12 @@ final class SpipPlatform implements PlatformInterface
 
     public function bareDeclaration(): Declaration
     {
-        return Distribution::declaration();
+        return Distribution::declaration($this->prefix);
     }
 
     public function frozenSchemas(): FrozenSchemas
     {
-        return new FrozenSchemas(__DIR__ . '/../resources/schema', 'spip');
+        return new FrozenSchemas(__DIR__ . '/../resources/schema', 'spip', 'spip_', $this->prefix . '_');
     }
 
     /**
@@ -100,7 +118,7 @@ final class SpipPlatform implements PlatformInterface
     public function readVersion(\PDO $pdo): ?string
     {
         try {
-            $statement = $pdo->query("SELECT valeur FROM spip_meta WHERE nom = 'plugin'");
+            $statement = $pdo->query('SELECT valeur FROM ' . $this->prefix . "_meta WHERE nom = 'plugin'");
         } catch (\PDOException) {
             return null;
         }

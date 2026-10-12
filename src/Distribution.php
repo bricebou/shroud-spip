@@ -32,7 +32,8 @@ use Shroud\Strategy\Value\ShiftedDate;
  * référents, les résultats de recherche, la file des travaux et les révisions sont vidés. Les
  * secrets de `spip_meta` sont vidés, SPIP les recrée ; les autres métas sont conservées.
  *
- * Un site qui étend ces tables repart de chaque méthode et complète ses colonnes.
+ * Un site qui étend ces tables repart de chaque méthode et complète ses colonnes. Les tables sont
+ * nommées avec le préfixe `spip` ; `declaration()` les renomme pour un site à un autre préfixe.
  */
 final class Distribution
 {
@@ -54,11 +55,18 @@ final class Distribution
     ];
 
     /**
-     * Rend la déclaration du SPIP nu.
+     * Rend la déclaration du SPIP nu, ses tables au préfixe du site.
      */
-    public static function declaration(): Declaration
+    public static function declaration(string $prefix = 'spip'): Declaration
     {
-        return new Declaration(self::tables());
+        if ($prefix === 'spip') {
+            return new Declaration(self::tables());
+        }
+
+        return new Declaration(array_map(
+            static fn(Table $table): Table => new Table($prefix . '_' . substr($table->name, strlen('spip_')), $table->primaryKey, $table->columns, $table->reference, $table->truncated),
+            self::tables(),
+        ));
     }
 
     /**

@@ -119,6 +119,28 @@ final class SpipPlatformTest extends TestCase
         self::assertStringContainsString("'courriel' => new Email(),", $code);
     }
 
+    public function testASiteWithAnotherPrefixGetsItsTablesRenamed(): void
+    {
+        $platform = SpipPlatform::forSite(__DIR__ . '/../fixtures/site');
+
+        self::assertSame('site', $platform->prefix);
+        self::assertTrue($platform->bareDeclaration()->has('site_auteurs'));
+        self::assertFalse($platform->bareDeclaration()->has('spip_auteurs'));
+        self::assertTrue($platform->bareDeclaration()->isRenumbered('auteur'));
+        self::assertTrue($platform->frozenSchemas()->load('4.4.28')->has('site_auteurs'));
+        self::assertSame('spip', new SpipPlatform()->prefix);
+    }
+
+    public function testTheVersionIsReadUnderThePrefixOfTheSite(): void
+    {
+        $pdo = new \PDO('sqlite::memory:');
+        $pdo->exec('CREATE TABLE site_meta (nom TEXT, valeur TEXT)');
+        $pdo->prepare('INSERT INTO site_meta VALUES (?, ?)')->execute(['plugin', serialize(['SPIP' => ['version' => '4.4.28']])]);
+
+        self::assertSame('4.4.28', new SpipPlatform('site')->readVersion($pdo));
+        self::assertNull(new SpipPlatform()->readVersion($pdo));
+    }
+
     /**
      * @param list<string> $renumbered
      */

@@ -103,4 +103,18 @@ final class DistributionTest extends TestCase
         self::assertNotSame($visitor['email_auteur'], $other['email_auteur'], 'un visiteur par message');
         self::assertSame($generator->pseudonymFor(new \Shroud\Identity\Reference('auteur', '12'))->email, $author['email_auteur']);
     }
+
+    /**
+     * Renommées, les tables gardent leur déclaration, et la couverture de leur schéma figé renommé reste complète.
+     */
+    public function testTheDistributionUnderAnotherPrefixCoversTheRenamedSchema(): void
+    {
+        $platform = new SpipPlatform('site');
+        $frozen = $platform->frozenSchemas();
+
+        $coverage = Coverage::compare($frozen->load($frozen->latest()), $platform->bareDeclaration());
+
+        self::assertTrue($coverage->isComplete(), implode("\n", $coverage->report()));
+        self::assertSame(['auteur'], $platform->bareDeclaration()->renumberedTypes());
+    }
 }
