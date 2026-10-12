@@ -1,0 +1,511 @@
+{
+    "spip_articles": {
+        "primaryKey": [
+            "id_article"
+        ],
+        "columns": {
+            "id_article": "bigint(21)",
+            "surtitre": "text",
+            "titre": "text",
+            "soustitre": "text",
+            "id_rubrique": "bigint(21)",
+            "descriptif": "text",
+            "chapo": "mediumtext",
+            "texte": "longtext",
+            "ps": "mediumtext",
+            "date": "datetime",
+            "statut": "varchar(10)",
+            "id_secteur": "bigint(21)",
+            "maj": "timestamp",
+            "export": "varchar(10)",
+            "date_redac": "datetime",
+            "visites": "int(11)",
+            "referers": "int(11)",
+            "popularite": "double",
+            "accepter_forum": "char(3)",
+            "date_modif": "datetime",
+            "lang": "varchar(10)",
+            "langue_choisie": "varchar(3)",
+            "id_trad": "bigint(21)",
+            "nom_site": "tinytext",
+            "url_site": "text",
+            "virtuel": "text"
+        }
+    },
+    "spip_auteurs": {
+        "primaryKey": [
+            "id_auteur"
+        ],
+        "columns": {
+            "id_auteur": "bigint(21)",
+            "nom": "text",
+            "bio": "text",
+            "email": "tinytext",
+            "nom_site": "tinytext",
+            "url_site": "text",
+            "login": "varchar(255)",
+            "pass": "tinytext",
+            "low_sec": "tinytext",
+            "statut": "varchar(255)",
+            "webmestre": "varchar(3)",
+            "maj": "timestamp",
+            "pgp": "text",
+            "htpass": "tinytext",
+            "en_ligne": "datetime",
+            "alea_actuel": "tinytext",
+            "alea_futur": "tinytext",
+            "prefs": "text",
+            "cookie_oubli": "tinytext",
+            "source": "varchar(10)",
+            "lang": "varchar(10)",
+            "imessage": "varchar(3)",
+            "backup_cles": "mediumtext"
+        }
+    },
+    "spip_auteurs_liens": {
+        "primaryKey": [
+            "id_auteur",
+            "id_objet",
+            "objet"
+        ],
+        "columns": {
+            "id_auteur": "bigint(21)",
+            "id_objet": "bigint(21)",
+            "objet": "varchar(25)",
+            "vu": "varchar(6)"
+        }
+    },
+    "spip_depots": {
+        "primaryKey": [
+            "id_depot"
+        ],
+        "columns": {
+            "id_depot": "bigint(21)",
+            "titre": "text",
+            "descriptif": "text",
+            "type": "varchar(10)",
+            "url_serveur": "varchar(255)",
+            "url_brouteur": "varchar(255)",
+            "url_archives": "varchar(255)",
+            "url_commits": "varchar(255)",
+            "xml_paquets": "varchar(255)",
+            "sha_paquets": "varchar(40)",
+            "nbr_paquets": "int(11)",
+            "nbr_plugins": "int(11)",
+            "nbr_autres": "int(11)",
+            "maj": "timestamp"
+        }
+    },
+    "spip_depots_plugins": {
+        "primaryKey": [
+            "id_depot",
+            "id_plugin"
+        ],
+        "columns": {
+            "id_depot": "bigint(21)",
+            "id_plugin": "bigint(21)"
+        }
+    },
+    "spip_documents": {
+        "primaryKey": [
+            "id_document"
+        ],
+        "columns": {
+            "id_document": "bigint(21)",
+            "id_vignette": "bigint(21)",
+            "extension": "varchar(10)",
+            "titre": "text",
+            "date": "datetime",
+            "descriptif": "text",
+            "fichier": "text",
+            "taille": "bigint(20)",
+            "largeur": "int(11)",
+            "hauteur": "int(11)",
+            "duree": "int(11)",
+            "media": "varchar(10)",
+            "mode": "varchar(10)",
+            "distant": "varchar(3)",
+            "statut": "varchar(10)",
+            "credits": "text",
+            "alt": "text",
+            "date_publication": "datetime",
+            "brise": "tinyint(4)",
+            "maj": "timestamp"
+        }
+    },
+    "spip_documents_liens": {
+        "primaryKey": [
+            "id_document",
+            "id_objet",
+            "objet"
+        ],
+        "columns": {
+            "id_document": "bigint(21)",
+            "id_objet": "bigint(21)",
+            "objet": "varchar(25)",
+            "vu": "enum('non','oui')",
+            "rang_lien": "int(4)"
+        }
+    },
+    "spip_forum": {
+        "primaryKey": [
+            "id_forum"
+        ],
+        "columns": {
+            "id_forum": "bigint(21)",
+            "id_objet": "bigint(21)",
+            "objet": "varchar(25)",
+            "id_parent": "bigint(21)",
+            "id_thread": "bigint(21)",
+            "date_heure": "datetime",
+            "date_thread": "datetime",
+            "titre": "text",
+            "texte": "mediumtext",
+            "auteur": "text",
+            "email_auteur": "text",
+            "nom_site": "text",
+            "url_site": "text",
+            "statut": "varchar(8)",
+            "ip": "varchar(40)",
+            "maj": "timestamp",
+            "id_auteur": "bigint(20)"
+        }
+    },
+    "spip_groupes_mots": {
+        "primaryKey": [
+            "id_groupe"
+        ],
+        "columns": {
+            "id_groupe": "bigint(21)",
+            "titre": "text",
+            "descriptif": "text",
+            "texte": "longtext",
+            "unseul": "varchar(3)",
+            "obligatoire": "varchar(3)",
+            "tables_liees": "text",
+            "minirezo": "varchar(3)",
+            "comite": "varchar(3)",
+            "forum": "varchar(3)",
+            "maj": "timestamp"
+        }
+    },
+    "spip_jobs": {
+        "primaryKey": [
+            "id_job"
+        ],
+        "columns": {
+            "id_job": "bigint(21)",
+            "descriptif": "text",
+            "fonction": "varchar(255)",
+            "args": "longblob",
+            "md5args": "char(32)",
+            "inclure": "varchar(255)",
+            "priorite": "smallint(6)",
+            "date": "datetime",
+            "status": "tinyint(4)",
+            "signature": "char(64)"
+        }
+    },
+    "spip_jobs_liens": {
+        "primaryKey": [
+            "id_job",
+            "id_objet",
+            "objet"
+        ],
+        "columns": {
+            "id_job": "bigint(21)",
+            "id_objet": "bigint(21)",
+            "objet": "varchar(25)"
+        }
+    },
+    "spip_meta": {
+        "primaryKey": [
+            "nom"
+        ],
+        "columns": {
+            "nom": "varchar(255)",
+            "valeur": "text",
+            "impt": "enum('non','oui')",
+            "maj": "timestamp"
+        }
+    },
+    "spip_mots": {
+        "primaryKey": [
+            "id_mot"
+        ],
+        "columns": {
+            "id_mot": "bigint(21)",
+            "titre": "text",
+            "descriptif": "text",
+            "texte": "longtext",
+            "id_groupe": "bigint(21)",
+            "type": "text",
+            "maj": "timestamp"
+        }
+    },
+    "spip_mots_liens": {
+        "primaryKey": [
+            "id_mot",
+            "id_objet",
+            "objet"
+        ],
+        "columns": {
+            "id_mot": "bigint(21)",
+            "id_objet": "bigint(21)",
+            "objet": "varchar(25)"
+        }
+    },
+    "spip_paquets": {
+        "primaryKey": [
+            "id_paquet"
+        ],
+        "columns": {
+            "id_paquet": "bigint(21)",
+            "id_plugin": "bigint(21)",
+            "prefixe": "varchar(48)",
+            "logo": "varchar(255)",
+            "version": "varchar(24)",
+            "version_base": "varchar(24)",
+            "compatibilite_spip": "varchar(24)",
+            "branches_spip": "varchar(255)",
+            "description": "text",
+            "auteur": "text",
+            "credit": "text",
+            "licence": "text",
+            "copyright": "text",
+            "lien_doc": "text",
+            "lien_demo": "text",
+            "lien_dev": "text",
+            "etat": "varchar(16)",
+            "etatnum": "int(1)",
+            "dependances": "text",
+            "procure": "text",
+            "date_crea": "datetime",
+            "date_modif": "datetime",
+            "id_depot": "bigint(21)",
+            "nom_archive": "varchar(255)",
+            "nbo_archive": "int(11)",
+            "maj_archive": "datetime",
+            "src_archive": "varchar(255)",
+            "traductions": "text",
+            "actif": "varchar(3)",
+            "installe": "varchar(3)",
+            "recent": "int(2)",
+            "maj_version": "varchar(255)",
+            "superieur": "varchar(3)",
+            "obsolete": "varchar(3)",
+            "attente": "varchar(3)",
+            "constante": "varchar(30)",
+            "signature": "varchar(32)"
+        }
+    },
+    "spip_plugins": {
+        "primaryKey": [
+            "id_plugin"
+        ],
+        "columns": {
+            "id_plugin": "bigint(21)",
+            "prefixe": "varchar(48)",
+            "nom": "text",
+            "slogan": "text",
+            "vmax": "varchar(24)",
+            "date_crea": "datetime",
+            "date_modif": "datetime",
+            "compatibilite_spip": "varchar(24)",
+            "branches_spip": "varchar(255)"
+        }
+    },
+    "spip_referers": {
+        "primaryKey": [
+            "referer_md5"
+        ],
+        "columns": {
+            "referer_md5": "bigint(20) unsigned",
+            "date": "date",
+            "referer": "varchar(255)",
+            "visites": "int(10) unsigned",
+            "visites_jour": "int(10) unsigned",
+            "visites_veille": "int(10) unsigned",
+            "maj": "timestamp"
+        }
+    },
+    "spip_referers_articles": {
+        "primaryKey": [
+            "id_article",
+            "referer_md5"
+        ],
+        "columns": {
+            "id_article": "int(10) unsigned",
+            "referer_md5": "bigint(20) unsigned",
+            "referer": "varchar(255)",
+            "visites": "int(10) unsigned",
+            "maj": "timestamp"
+        }
+    },
+    "spip_resultats": {
+        "primaryKey": [],
+        "columns": {
+            "recherche": "char(16)",
+            "id": "int(10) unsigned",
+            "points": "int(10) unsigned",
+            "table_objet": "varchar(30)",
+            "serveur": "char(16)",
+            "maj": "timestamp"
+        }
+    },
+    "spip_rubriques": {
+        "primaryKey": [
+            "id_rubrique"
+        ],
+        "columns": {
+            "id_rubrique": "bigint(21)",
+            "id_parent": "bigint(21)",
+            "titre": "text",
+            "descriptif": "text",
+            "texte": "longtext",
+            "id_secteur": "bigint(21)",
+            "maj": "timestamp",
+            "statut": "varchar(10)",
+            "date": "datetime",
+            "lang": "varchar(10)",
+            "langue_choisie": "varchar(3)",
+            "statut_tmp": "varchar(10)",
+            "date_tmp": "datetime",
+            "profondeur": "smallint(5)"
+        }
+    },
+    "spip_syndic": {
+        "primaryKey": [
+            "id_syndic"
+        ],
+        "columns": {
+            "id_syndic": "bigint(21)",
+            "id_rubrique": "bigint(21)",
+            "id_secteur": "bigint(21)",
+            "nom_site": "text",
+            "url_site": "text",
+            "url_syndic": "text",
+            "descriptif": "text",
+            "maj": "timestamp",
+            "syndication": "varchar(3)",
+            "statut": "varchar(10)",
+            "date": "datetime",
+            "date_syndic": "datetime",
+            "date_index": "datetime",
+            "moderation": "varchar(3)",
+            "miroir": "varchar(3)",
+            "oubli": "varchar(3)",
+            "resume": "varchar(3)"
+        }
+    },
+    "spip_syndic_articles": {
+        "primaryKey": [
+            "id_syndic_article"
+        ],
+        "columns": {
+            "id_syndic_article": "bigint(21)",
+            "id_syndic": "bigint(21)",
+            "titre": "text",
+            "url": "text",
+            "date": "datetime",
+            "lesauteurs": "text",
+            "maj": "timestamp",
+            "statut": "varchar(10)",
+            "descriptif": "text",
+            "lang": "varchar(10)",
+            "url_source": "tinytext",
+            "source": "tinytext",
+            "tags": "text",
+            "raw_data": "text",
+            "raw_format": "tinytext",
+            "raw_methode": "tinytext"
+        }
+    },
+    "spip_types_documents": {
+        "primaryKey": [
+            "extension"
+        ],
+        "columns": {
+            "extension": "varchar(10)",
+            "titre": "text",
+            "descriptif": "text",
+            "mime_type": "varchar(100)",
+            "inclus": "enum('non','image','embed')",
+            "upload": "enum('oui','non')",
+            "media_defaut": "varchar(10)",
+            "maj": "timestamp"
+        }
+    },
+    "spip_urls": {
+        "primaryKey": [
+            "id_parent",
+            "url"
+        ],
+        "columns": {
+            "id_parent": "bigint(21)",
+            "url": "varchar(255)",
+            "type": "varchar(25)",
+            "id_objet": "bigint(21)",
+            "date": "datetime",
+            "segments": "smallint(3)",
+            "perma": "tinyint(1)",
+            "langue": "varchar(10)"
+        }
+    },
+    "spip_versions": {
+        "primaryKey": [
+            "id_version",
+            "id_objet",
+            "objet"
+        ],
+        "columns": {
+            "id_version": "bigint(21)",
+            "id_objet": "bigint(21)",
+            "objet": "varchar(25)",
+            "date": "datetime",
+            "id_auteur": "varchar(23)",
+            "titre_version": "text",
+            "permanent": "char(3)",
+            "champs": "text"
+        }
+    },
+    "spip_versions_fragments": {
+        "primaryKey": [
+            "id_fragment",
+            "version_min",
+            "id_objet",
+            "objet"
+        ],
+        "columns": {
+            "id_fragment": "int(10) unsigned",
+            "version_min": "int(10) unsigned",
+            "version_max": "int(10) unsigned",
+            "id_objet": "bigint(21)",
+            "objet": "varchar(25)",
+            "compress": "tinyint(4)",
+            "fragment": "longblob"
+        }
+    },
+    "spip_visites": {
+        "primaryKey": [
+            "date"
+        ],
+        "columns": {
+            "date": "date",
+            "visites": "int(10) unsigned",
+            "maj": "timestamp"
+        }
+    },
+    "spip_visites_articles": {
+        "primaryKey": [
+            "date",
+            "id_article"
+        ],
+        "columns": {
+            "date": "date",
+            "id_article": "int(10) unsigned",
+            "visites": "int(10) unsigned",
+            "maj": "timestamp"
+        }
+    }
+}
