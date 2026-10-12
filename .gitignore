@@ -3,6 +3,7 @@
 /composer.lock
 
 # Configurations locales et caches
+/grumphp.yaml
 /phpstan.neon
 /phpunit.xml
 /.phpunit.cache/

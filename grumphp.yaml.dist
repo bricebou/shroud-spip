@@ -1,0 +1,48 @@
+# Vérifications avant chaque commit : Rector puis ECS corrigent les fichiers indexés, PHPStan les
+# analyse, et le message doit suivre les Conventional Commits. Les tests restent à l'intégration continue.
+#
+# Pour lancer GrumPHP autrement que par le PHP de l'hôte, un `grumphp.yaml` local, non versionné,
+# importe ce fichier et fixe la commande des hooks, puis `vendor/bin/grumphp git:init` les réécrit :
+#
+#   imports:
+#     - { resource: grumphp.yaml.dist }
+#   grumphp:
+#     git_hook_variables:
+#       EXEC_GRUMPHP_COMMAND: '<commande qui lance php dans l’environnement du projet>'
+
+grumphp:
+  stop_on_failure: true
+  fixer:
+    enabled: true
+    fix_by_default: true
+  tasks:
+    rector:
+      metadata:
+        priority: 20
+      triggered_by: [php]
+      clear_cache: false
+    ecs:
+      metadata:
+        priority: 10
+      files_on_pre_commit: true
+      triggered_by: [php]
+      no-progress-bar: true
+    phpstan:
+      metadata:
+        priority: 0
+      memory_limit: '-1'
+      triggered_by: [php]
+      use_grumphp_paths: true
+    git_commit_message:
+      enforce_capitalized_subject: false
+      enforce_single_lined_subject: true
+      max_subject_width: 80
+      # Les lignes du corps ne sont pas limitées : une adresse peut dépasser.
+      max_body_width: 0
+      skip_on_merge_commit: true
+      # Le sujet peut commencer par une lettre accentuée.
+      additional_modifiers: u
+      type_scope_conventions:
+        types: [build, chore, ci, docs, feat, fix, perf, refactor, revert, style, test]
+        scopes: []
+        subject_pattern: '[\p{L}\p{N}]'
