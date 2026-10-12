@@ -77,6 +77,8 @@
         "check:rector": "rector process --dry-run --ansi",
         "check:static": "phpstan --memory-limit=-1",
         "check:syntax": "parallel-lint --exclude vendor .",
+        "ci:static": "phpstan --memory-limit=-1 --no-progress --error-format=gitlab > build/phpstan.json || (phpstan --memory-limit=-1 --no-progress; exit 1)",
+        "ci:test": "@test --log-junit build/junit.xml",
         "fix": [
             "@fix:rector",
             "@fix:cs"
@@ -91,6 +93,8 @@
         "check:rector": "Lister les changements que Rector appliquerait",
         "check:static": "Analyse statique (PHPStan)",
         "check:syntax": "Vérifier la syntaxe PHP (parallel-lint)",
+        "ci:static": "Analyse statique pour l'intégration continue : rapport GitLab dans build/phpstan.json, erreurs au journal en cas d'échec",
+        "ci:test": "Tests unitaires pour l'intégration continue : rapport JUnit dans build/junit.xml",
         "fix": "Appliquer Rector, puis le style",
         "fix:cs": "Corriger le style (ECS, règles SPIP)",
         "fix:rector": "Appliquer les règles Rector",
