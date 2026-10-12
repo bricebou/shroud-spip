@@ -69,24 +69,26 @@ final readonly class SpipPlatform extends AbstractPlatform
     }
 
     /**
-     * Rend les marqueurs de langue des blocs `<multi>`, `[en]`, et les raccourcis de liens, `->art12` ;
-     * les modèles, `<img12|left>`, sont déjà des balises pour le noyau.
+     * Rend les marqueurs de langue des blocs `<multi>`, `[en]`, et les raccourcis de liens, `->art12`,
+     * `-> aut 12` ; les modèles, `<img12|left>`, sont déjà des balises pour le noyau.
      */
     public function preservedMarkup(): array
     {
-        return ['\[[a-z]{2,3}(?:_[a-zA-Z]{2,4})?\]', '->[a-z]*\d+'];
+        return ['\[[a-z]{2,3}(?:_[a-zA-Z]{2,4})?\]', '->>?\s*\p{L}*\s*\d+'];
     }
 
     /**
      * Renumérote les raccourcis `[->aut12]` et les modèles `<img7|left>` dont le type est renuméroté.
      *
-     * Le préfixe se résout par les alias de `typer_raccourci()` ; un lien sans préfixe, `[->12]`,
-     * vise un article, et un modèle sans préfixe, `<12>`, n'est pas un raccourci.
+     * Comme dans `typer_raccourci()`, la cible d'un lien admet des espaces autour du préfixe,
+     * `[-> aut 12]`, et un modèle une espace avant son numéro, `<img 7|left>`. Le préfixe se résout
+     * par les alias de cette même fonction ; un lien sans préfixe, `[->12]`, vise un article, et un
+     * modèle sans préfixe, `<12>`, n'est pas un raccourci.
      */
     public function renumberReferences(string $text, Context $context): string
     {
         return preg_replace_callback(
-            '/(->|<)(\p{Ll}*)(\d+)/u',
+            '/(->>?\s*|<)(\p{Ll}*)(\s*)(\d+)/u',
             static function (array $match) use ($context): string {
                 if ($match[2] === '' && $match[1] === '<') {
                     return $match[0];
@@ -96,7 +98,7 @@ final readonly class SpipPlatform extends AbstractPlatform
                     return $match[0];
                 }
 
-                return $match[1] . $match[2] . $context->generator->permutationFor($type)->apply((int) $match[3]);
+                return $match[1] . $match[2] . $match[3] . $context->generator->permutationFor($type)->apply((int) $match[4]);
             },
             $text,
         ) ?? $text;

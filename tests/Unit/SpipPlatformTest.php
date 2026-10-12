@@ -32,6 +32,21 @@ final class SpipPlatformTest extends TestCase
         );
     }
 
+    public function testTheShortcutsAdmitTheSpacesThatSpipAdmits(): void
+    {
+        $generator = new Generator('sel de test', platform: new SpipPlatform());
+        $auteur = $generator->permutationFor('auteur')->apply(12);
+        $document = $generator->permutationFor('document')->apply(7);
+
+        self::assertSame(
+            "[-> aut{$auteur}] [->aut {$auteur}] [-> auteur {$auteur} ] [->>aut{$auteur}] [->aut{$auteur}?var=1#bas] <img {$document}|left> <doc {$document} >",
+            new SpipPlatform()->renumberReferences(
+                '[-> aut12] [->aut 12] [-> auteur 12 ] [->>aut12] [->aut12?var=1#bas] <img 7|left> <doc 7 >',
+                $this->context($generator, ['auteur', 'document']),
+            ),
+        );
+    }
+
     public function testALinkWithoutPrefixTargetsAnArticle(): void
     {
         $generator = new Generator('sel de test', platform: new SpipPlatform());
@@ -45,8 +60,8 @@ final class SpipPlatformTest extends TestCase
         $text = new Generator('sel de test', language: new French(), platform: new SpipPlatform())->text();
 
         self::assertSame(
-            '<multi>[en]Alpha[fr]Beta</multi> [gamma delta->art12] [->12] <img7|left>',
-            $text->replaceWords('<multi>[en]Partners[fr]Partenaires</multi> [la fiche->art12] [->12] <img7|left>', static fn(int $rank): string => ['alpha', 'beta', 'gamma'][$rank] ?? 'delta'),
+            '<multi>[en]Alpha[fr]Beta</multi> [gamma delta->art12] [->12] [-> aut 12] <img7|left>',
+            $text->replaceWords('<multi>[en]Partners[fr]Partenaires</multi> [la fiche->art12] [->12] [-> aut 12] <img7|left>', static fn(int $rank): string => ['alpha', 'beta', 'gamma'][$rank] ?? 'delta'),
         );
         self::assertSame('[->art12] [->12] [fr]', $text->replaceCodes('[->art12] [->12] [fr]', static fn(): string => 'x', static fn(): int => 7));
     }
