@@ -92,14 +92,15 @@ final class DistributionTest extends TestCase
             'id_forum' => $id, 'id_objet' => '3', 'objet' => 'article', 'id_parent' => '0', 'id_thread' => $id,
             'date_heure' => '2026-01-01 00:00:00', 'date_thread' => '2026-01-01 00:00:00', 'titre' => 'Question', 'texte' => 'Bonjour',
             'auteur' => 'Jean Dupont', 'email_auteur' => 'jean@exemple-reel.test', 'nom_site' => '', 'url_site' => '', 'statut' => 'publie',
-            'ip' => '192.0.2.1', 'maj' => '2026-01-01 00:00:00', 'id_auteur' => $auteur,
+            'ip' => '203.0.114.7', 'maj' => '2026-01-01 00:00:00', 'id_auteur' => $auteur,
         ];
 
         $visitor = $disguiser->disguiseRow('spip_forum', $message('1', '0'));
         $other = $disguiser->disguiseRow('spip_forum', $message('2', '0'));
         $author = $disguiser->disguiseRow('spip_forum', $message('3', '12'));
 
-        self::assertSame('', $visitor['ip']);
+        self::assertNotSame('203.0.114.7', $visitor['ip'], 'une adresse IP fictive');
+        self::assertSame($visitor['ip'], $other['ip'], 'la même pour la même adresse');
         self::assertNotSame($visitor['email_auteur'], $other['email_auteur'], 'un visiteur par message');
         self::assertSame($generator->pseudonymFor(new \Shroud\Identity\Reference('auteur', '12'))->email, $author['email_auteur']);
     }
@@ -116,5 +117,41 @@ final class DistributionTest extends TestCase
 
         self::assertTrue($coverage->isComplete(), implode("\n", $coverage->report()));
         self::assertSame(['auteur'], $platform->bareDeclaration()->renumberedTypes());
+    }
+
+    public function testAPublicTextLosesTheIdentifiersItQuotes(): void
+    {
+        $disguiser = new Disguiser(Distribution::declaration(), new Generator(self::SALT, platform: new SpipPlatform()));
+        $article = $disguiser->disguiseRow('spip_articles', [
+            'id_article' => '1', 'id_rubrique' => '1', 'date' => '2026-01-01 00:00:00', 'statut' => 'publie', 'id_secteur' => '1',
+            'maj' => '2026-01-01 00:00:00', 'export' => 'oui', 'date_redac' => '0000-00-00 00:00:00', 'visites' => '0',
+            'referers' => '0', 'popularite' => '0', 'accepter_forum' => 'non', 'date_modif' => '2026-01-01 00:00:00',
+            'lang' => 'fr', 'langue_choisie' => 'non', 'id_trad' => '0', 'nom_site' => '', 'url_site' => '', 'virtuel' => '',
+            'surtitre' => '', 'titre' => 'Contact', 'soustitre' => '', 'descriptif' => '', 'chapo' => '', 'ps' => '',
+            'texte' => 'Écrire à zoe@exemple-reel.test ou appeler le 06 12 34 56 78.',
+        ]);
+
+        self::assertIsString($article['texte']);
+        self::assertStringStartsWith('Écrire à ', $article['texte']);
+        self::assertStringNotContainsString('zoe@exemple-reel.test', $article['texte']);
+        self::assertStringNotContainsString('12 34 56 78', $article['texte']);
+        self::assertSame('Contact', $article['titre']);
+    }
+
+    public function testAnOrdinaryMetaLosesTheIdentifiersItQuotes(): void
+    {
+        $disguiser = new Disguiser(Distribution::declaration(), new Generator(self::SALT, platform: new SpipPlatform()));
+        $meta = static fn(string $nom, string $valeur): mixed => $disguiser->disguiseRow('spip_meta', ['nom' => $nom, 'valeur' => $valeur, 'impt' => 'oui', 'maj' => '2026-01-01 00:00:00'])['valeur'];
+
+        self::assertSame('Mon site', $meta('nom_site', 'Mon site'));
+        $contact = $meta('adresse_contact', 'contact@exemple-reel.test');
+        self::assertIsString($contact);
+        self::assertStringNotContainsString('contact@exemple-reel.test', $contact);
+        $configuration = $meta('plugin_x', serialize(['email' => 'contact@exemple-reel.test', 'couleur' => 'bleu']));
+        self::assertIsString($configuration);
+        $decoded = unserialize($configuration);
+        self::assertIsArray($decoded);
+        self::assertSame('bleu', $decoded['couleur']);
+        self::assertNotSame('contact@exemple-reel.test', $decoded['email'], 'dans une configuration sérialisée aussi');
     }
 }

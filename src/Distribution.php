@@ -22,15 +22,19 @@ use Shroud\Strategy\Value\Constant;
 use Shroud\Strategy\Value\Keep;
 use Shroud\Strategy\Value\ShapedText;
 use Shroud\Strategy\Value\ShiftedDate;
+use Shroud\Strategy\Wrapper\WithoutIdentifiers;
+use Shroud\Strategy\Wrapper\WithoutIps;
 
 /**
  * Déclare un SPIP nu, noyau et plugins de la distribution, dans l'état de SPIP 4.
  *
  * Les auteurs sont renumérotés et pseudonymisés, les messages de forum aussi ; les objets
  * éditoriaux publics, articles, rubriques, mots, documents, sites syndiqués, sont conservés, leurs
- * textes ne changeant que par les raccourcis vers les auteurs. Les statistiques de visites et de
- * référents, les résultats de recherche, la file des travaux et les révisions sont vidés. Les
- * secrets de `spip_meta` sont vidés, SPIP les recrée ; les autres métas sont conservées.
+ * textes ne changeant que par les raccourcis vers les auteurs et les courriels, numéros de
+ * téléphone et adresses IP qu'ils citent. Les statistiques de visites et de référents, les
+ * résultats de recherche, la file des travaux et les révisions sont vidés. Les secrets de
+ * `spip_meta` sont vidés, SPIP les recrée ; les autres métas sont conservées sans leurs
+ * courriels, numéros et adresses IP.
  *
  * Un site qui étend ces tables repart de chaque méthode et complète ses colonnes. Les tables sont
  * nommées avec le préfixe `spip` ; `declaration()` les renomme pour un site à un autre préfixe.
@@ -133,7 +137,7 @@ final class Distribution
     }
 
     /**
-     * Déclare les articles : contenu public conservé, seuls les raccourcis vers les auteurs changent.
+     * Déclare les articles : contenu public conservé, seuls les raccourcis vers les auteurs et les identifiants cités changent.
      */
     public static function articles(): Table
     {
@@ -143,7 +147,7 @@ final class Distribution
                 'referers', 'popularite', 'accepter_forum', 'date_modif', 'lang', 'langue_choisie', 'id_trad', 'nom_site',
                 'url_site', 'virtuel',
             ]),
-            ...EmbeddedReferences::forColumns(['surtitre', 'titre', 'soustitre', 'descriptif', 'chapo', 'texte', 'ps']),
+            ...self::publicTexts(['surtitre', 'titre', 'soustitre', 'descriptif', 'chapo', 'texte', 'ps']),
         ]);
     }
 
@@ -203,7 +207,7 @@ final class Distribution
                 'id_document', 'id_vignette', 'extension', 'date', 'fichier', 'taille', 'largeur', 'hauteur', 'duree',
                 'media', 'mode', 'distant', 'statut', 'date_publication', 'brise', 'maj',
             ]),
-            ...EmbeddedReferences::forColumns(['titre', 'descriptif', 'credits', 'alt']),
+            ...self::publicTexts(['titre', 'descriptif', 'credits', 'alt']),
         ]);
     }
 
@@ -228,7 +232,7 @@ final class Distribution
             'nom_site' => new ShapedText(),
             'url_site' => new Url(keepHost: false),
             'statut' => new Keep(),
-            'ip' => new Clear(),
+            'ip' => new WithoutIps(),
             'maj' => new Keep(),
             'id_auteur' => new RenumberedId('auteur'),
         ], ReferenceColumns::fromFixedType('auteur', 'id_auteur')->withFallback(ReferenceColumns::fromFixedType('forum', 'id_forum')));
@@ -236,7 +240,8 @@ final class Distribution
 
     /**
      * Déclare les métas : les secrets sont vidés, SPIP les recrée ; le courriel du webmestre devient
-     * fictif ; tout le reste, configuration du site et des plugins, est conservé.
+     * fictif ; tout le reste, configuration du site et des plugins, est conservé, sérialisé ou non,
+     * sans les courriels, numéros de téléphone et adresses IP qu'il cite.
      */
     public static function meta(): Table
     {
@@ -247,14 +252,14 @@ final class Distribution
 
         return new Table('spip_meta', 'nom', [
             'nom' => new Keep(),
-            'valeur' => new ByColumn('nom', $cases, new Keep()),
+            'valeur' => new ByColumn('nom', $cases, new Serialized(new PerKey([], new WithoutIdentifiers(), deep: true), new WithoutIdentifiers())),
             'impt' => new Keep(),
             'maj' => new Keep(),
         ]);
     }
 
     /**
-     * Déclare les rubriques : contenu public conservé, seuls les raccourcis changent.
+     * Déclare les rubriques : contenu public conservé, seuls les raccourcis et les identifiants cités changent.
      */
     public static function rubriques(): Table
     {
@@ -263,7 +268,7 @@ final class Distribution
                 'id_rubrique', 'id_parent', 'id_secteur', 'maj', 'statut', 'date', 'lang', 'langue_choisie', 'statut_tmp',
                 'date_tmp', 'profondeur',
             ]),
-            ...EmbeddedReferences::forColumns(['titre', 'descriptif', 'texte']),
+            ...self::publicTexts(['titre', 'descriptif', 'texte']),
         ]);
     }
 
@@ -309,5 +314,18 @@ final class Distribution
     private static function kept(string $name, string|array $primaryKey, array $columns): Table
     {
         return new Table($name, $primaryKey, Keep::forColumns($columns));
+    }
+
+    /**
+     * Déclare des textes publics conservés : les raccourcis vers les auteurs suivent la renumérotation,
+     * les courriels, numéros de téléphone et adresses IP qu'ils citent sont remplacés.
+     *
+     * @param list<string> $columns
+     *
+     * @return array<string, WithoutIdentifiers>
+     */
+    private static function publicTexts(array $columns): array
+    {
+        return array_fill_keys($columns, new WithoutIdentifiers(new EmbeddedReferences()));
     }
 }

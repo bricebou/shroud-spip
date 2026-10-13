@@ -130,7 +130,7 @@ final class SpipPlatformTest extends TestCase
         self::assertStringContainsString("'prenom' => new FirstName(),", $code);
         self::assertStringContainsString("'nom' => new FullName(), // @todo review", $code);
         self::assertStringContainsString("'alea_actuel' => new Clear(),", $code);
-        self::assertStringContainsString("'texte' => new EmbeddedReferences(), // @todo review", $code);
+        self::assertStringContainsString("'texte' => new WithoutIdentifiers(new EmbeddedReferences()), // @todo review", $code);
         self::assertStringContainsString("'courriel' => new Email(),", $code);
     }
 

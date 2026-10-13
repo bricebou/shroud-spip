@@ -16,6 +16,7 @@ use Shroud\Strategy\Reference\EmbeddedReferences;
 use Shroud\Strategy\Reference\RenumberedPolymorphicId;
 use Shroud\Strategy\Value\Clear;
 use Shroud\Strategy\Value\Keep;
+use Shroud\Strategy\Wrapper\WithoutIdentifiers;
 
 /**
  * Décrit SPIP au noyau de Shroud : son balisage, ses raccourcis, sa distribution, ses schémas figés,
@@ -167,7 +168,7 @@ final readonly class SpipPlatform extends AbstractPlatform
             new DraftRule('/^(pass|htpass|low_sec|pgp|alea_actuel|alea_futur|cookie_oubli|backup_cles)$/', 'new Clear()', imports: [Clear::class]),
             new DraftRule('/^id_objet$/', "new RenumberedPolymorphicId('objet')", sibling: 'objet', imports: [RenumberedPolymorphicId::class]),
             new DraftRule('/^objet$/', 'new Keep()', imports: [Keep::class]),
-            new DraftRule('/^(surtitre|titre|soustitre|chapo|descriptif|texte|ps)$/', 'new EmbeddedReferences()', review: true, imports: [EmbeddedReferences::class]),
+            new DraftRule('/^(surtitre|titre|soustitre|chapo|descriptif|texte|ps)$/', 'new WithoutIdentifiers(new EmbeddedReferences())', review: true, imports: [WithoutIdentifiers::class, EmbeddedReferences::class]),
         ];
     }
 
