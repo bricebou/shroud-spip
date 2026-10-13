@@ -46,7 +46,7 @@ final class DistributionTest extends TestCase
 
         $result = $disguiser->disguiseTables([
             'spip_auteurs' => [[
-                'id_auteur' => '12', 'nom' => 'Zoé Kowalczyk', 'bio' => 'Associée [ici->aut12]', 'email' => 'z@exemple-reel.test',
+                'id_auteur' => '12', 'nom' => 'Zoé Kowalczyk', 'bio' => 'Associée [ici->aut12], zoe@exemple-reel.test', 'email' => 'z@exemple-reel.test',
                 'nom_site' => '', 'url_site' => '', 'login' => 'zoe', 'pass' => 'x', 'low_sec' => 'x', 'statut' => '0minirezo',
                 'webmestre' => 'non', 'maj' => '2026-01-01 00:00:00', 'pgp' => '', 'htpass' => 'x', 'en_ligne' => '2026-01-01 00:00:00',
                 'alea_actuel' => 'x', 'alea_futur' => 'x', 'prefs' => serialize(['couleur' => 2, 'digest' => ['a' => 'b']]),
@@ -75,6 +75,7 @@ final class DistributionTest extends TestCase
         self::assertSame("Par [l'auteur->aut{$renumbered}] et [->art2]", $result['spip_articles'][0]['texte']);
         self::assertIsString($result['spip_auteurs'][0]['bio']);
         self::assertStringContainsString("->aut{$renumbered}]", $result['spip_auteurs'][0]['bio']);
+        self::assertMatchesRegularExpression('/, [a-z.-]+@example\.(com|net|org)$/', $result['spip_auteurs'][0]['bio'], 'une adresse fictive sur un domaine réservé');
         self::assertSame('', $result['spip_auteurs'][0]['pass']);
         self::assertIsString($result['spip_auteurs'][0]['prefs']);
         self::assertSame(['couleur' => 2, 'digest' => []], unserialize($result['spip_auteurs'][0]['prefs']));

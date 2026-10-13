@@ -153,14 +153,15 @@ final class Distribution
     }
 
     /**
-     * Déclare les auteurs : renumérotés, pseudonymisés, leurs secrets vidés.
+     * Déclare les auteurs : renumérotés, pseudonymisés, leurs secrets vidés ; leur biographie garde
+     * sa forme, et les courriels, numéros de téléphone et adresses IP qu'elle cite deviennent fictifs.
      */
     public static function auteurs(): Table
     {
         return new Table('spip_auteurs', 'id_auteur', [
             'id_auteur' => new RenumberedId('auteur'),
             'nom' => new FullName(),
-            'bio' => new ShapedText(),
+            'bio' => new WithoutIdentifiers(new ShapedText()),
             'email' => new Email(),
             'nom_site' => new ShapedText(),
             'url_site' => new Url(keepHost: false),
@@ -214,7 +215,9 @@ final class Distribution
 
     /**
      * Déclare les messages de forum : un auteur inscrit garde son pseudonyme, un visiteur en reçoit
-     * un par message ; l'adresse IP est vidée.
+     * un par message ; le titre et le texte gardent leur forme, les courriels, numéros de téléphone
+     * et adresses IP qu'ils citent deviennent fictifs ; l'adresse IP du message aussi, la même pour
+     * la même adresse.
      */
     public static function forum(): Table
     {
@@ -226,8 +229,8 @@ final class Distribution
             'id_thread' => new Keep(),
             'date_heure' => new Keep(),
             'date_thread' => new Keep(),
-            'titre' => new ShapedText(),
-            'texte' => new ShapedText(),
+            'titre' => new WithoutIdentifiers(new ShapedText()),
+            'texte' => new WithoutIdentifiers(new ShapedText()),
             'auteur' => new FullName(),
             'email_auteur' => new Email(),
             'nom_site' => new ShapedText(),
