@@ -65,7 +65,6 @@ $declaration = $platform->bareDeclaration();
 return new Configuration(
     declaration: $declaration,
     salt: 'un sel propre au projet',
-    locale: 'fr_FR',
     language: new French(),
     platform: $platform,
 );

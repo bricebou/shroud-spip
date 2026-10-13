@@ -41,7 +41,7 @@ final class DistributionTest extends TestCase
 
     public function testAnAuthorAndTheirArticleStayLinked(): void
     {
-        $generator = new Generator(self::SALT, 'fr_FR', language: new French(), platform: new SpipPlatform());
+        $generator = new Generator(self::SALT, language: new French(), platform: new SpipPlatform());
         $disguiser = new Disguiser(Distribution::declaration(), $generator);
 
         $result = $disguiser->disguiseTables([

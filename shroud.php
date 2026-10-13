@@ -18,7 +18,6 @@ $platform = new SpipPlatform();
 return new Configuration(
     declaration: $platform->bareDeclaration(),
     salt: 'spip-nu',
-    locale: 'fr_FR',
     language: new French(),
     platform: $platform,
 );
