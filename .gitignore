@@ -7,4 +7,3 @@
 /phpstan.neon
 /phpunit.xml
 /.phpunit.cache/
-/build/
