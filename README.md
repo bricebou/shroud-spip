@@ -14,15 +14,20 @@ de texte.
 
 Le noyau ne connaît aucun CMS ; ce paquet lui apporte ce qui appartient à SPIP :
 
-- la **déclaration du SPIP nu**, noyau et plugins de la distribution, au préfixe de tables du site ;
+- la **déclaration du SPIP nu**, noyau et plugins de la distribution, au préfixe de tables du
+  site : les auteurs et les messages de forum sont pseudonymisés ; les contenus publics sont
+  conservés, les textes des articles, rubriques et documents sans les courriels, numéros de
+  téléphone et adresses IP qu'ils citent, les mots-clés et les sites syndiqués tels quels ; les
+  secrets, les statistiques et les révisions sont vidés ;
 - les **schémas figés** de chaque version de SPIP dont le schéma change, auxquels `shroud-diff`
   compare la base d'un site ;
 - la **lecture de `config/connect.php`**, pour se connecter sans répéter les accès, et de la
   version de SPIP dans la méta `plugin` ;
 - les **conventions de texte** : les blocs `<multi>` et leurs marqueurs de langue sont préservés,
-  et les raccourcis `[->aut12]` et modèles `<img7|left>` suivent la renumérotation de leur objet ;
+  et les raccourcis `[->aut12]` et modèles `<img7|left>` suivent la renumérotation de leur objet,
+  quand son type est renuméroté ;
 - les **règles du brouillon** : secrets de SPIP à vider, liaisons `objet` + `id_objet`, textes
-  éditoriaux, glossaires français puis anglais.
+  éditoriaux à conserver sans leurs identifiants, glossaires français puis anglais.
 
 ## Prérequis
 

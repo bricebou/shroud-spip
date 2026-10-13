@@ -29,9 +29,10 @@ use Shroud\Strategy\Wrapper\WithoutIps;
  * Déclare un SPIP nu, noyau et plugins de la distribution, dans l'état de SPIP 4.
  *
  * Les auteurs sont renumérotés et pseudonymisés, les messages de forum aussi ; les objets
- * éditoriaux publics, articles, rubriques, mots, documents, sites syndiqués, sont conservés, leurs
- * textes ne changeant que par les raccourcis vers les auteurs et les courriels, numéros de
- * téléphone et adresses IP qu'ils citent. Les statistiques de visites et de référents, les
+ * éditoriaux publics, articles, rubriques, mots, documents, sites syndiqués, sont conservés ; les
+ * textes des articles, rubriques et documents ne changent que par les raccourcis vers les auteurs
+ * et les courriels, numéros de téléphone et adresses IP qu'ils citent, les mots et les sites
+ * restent tels quels. Les statistiques de visites et de référents, les
  * résultats de recherche, la file des travaux et les révisions sont vidés. Les secrets de
  * `spip_meta` sont vidés, SPIP les recrée ; les autres métas sont conservées sans leurs
  * courriels, numéros et adresses IP.
